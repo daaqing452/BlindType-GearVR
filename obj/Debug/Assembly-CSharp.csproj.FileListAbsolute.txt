@@ -1,0 +1,42 @@
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Assembly-CSharp.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Assembly-CSharp.pdb
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEditor.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.Networking.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.UI.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Mono.Cecil.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Unity.SerializationLogic.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Unity.DataContract.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Unity.UNetWeaver.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Unity.CecilTools.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEditor.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.UI.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\Temp\bin\Debug\UnityEngine.Networking.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\obj\Debug\Assembly-CSharp.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote-Text-Entry\obj\Debug\Assembly-CSharp.pdb
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Assembly-CSharp.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Assembly-CSharp.pdb
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEditor.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.Networking.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.UI.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Mono.Cecil.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Unity.SerializationLogic.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Unity.DataContract.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Unity.UNetWeaver.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Unity.CecilTools.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEditor.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.UI.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\Temp\bin\Debug\UnityEngine.Networking.xml
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\obj\Debug\Assembly-CSharp.dll
+F:\Eyes-Free Text Entry QWERTY\Experiment 3\Remote Text Entry\obj\Debug\Assembly-CSharp.pdb
