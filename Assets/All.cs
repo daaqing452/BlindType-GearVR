@@ -20,14 +20,14 @@ public class All : MonoBehaviour {
     
     // component
     Text tSample;
-    Text tInputed;
+    Text tinputted;
     Text[] tDragItems;
     string infoText;
 
-    // sample and inputed
-    List<string> inputedWords;
-    List<Vector2> inputedPoints;
-    List<Vector2[]> inputedPointsAll;
+    // sample and inputted
+    List<string> inputtedWords;
+    List<Vector2> inputtedPoints;
+    List<Vector2[]> inputtedPointsAll;
     string[] sampleSentences;
     int sampleIndex;
     string[] candidates;
@@ -55,7 +55,7 @@ public class All : MonoBehaviour {
         eventsMutex = new object();
         
         tSample = GameObject.Find("Sample").GetComponent<Text>();
-        tInputed = GameObject.Find("Inputed").GetComponent<Text>();
+        tinputted = GameObject.Find("Inputted").GetComponent<Text>();
         tDragItems = new Text[DRAG_ITEM_N];
         GameObject canvas = GameObject.Find("Canvas");
         for (int i = 0; i < DRAG_ROW; i++)
@@ -67,16 +67,16 @@ public class All : MonoBehaviour {
                 tDragItems[i * DRAG_COLUMN + j] = gDragItem.GetComponentInChildren<Text>();
             }
 
-        inputedWords = new List<string>();
-        inputedPoints = new List<Vector2>();
-        inputedPointsAll = new List<Vector2[]>();
+        inputtedWords = new List<string>();
+        inputtedPoints = new List<Vector2>();
+        inputtedPointsAll = new List<Vector2[]>();
         sampleSentences = XFileReader.Read("phrases-normal.txt");
         for (int i = 0; i < sampleSentences.Length; i++) sampleSentences[i] = sampleSentences[i].ToLower();
         sampleIndex = -1;
         selectIndex = 0;
         
         UpdateSample();
-        UpdateInputed();
+        Updateinputted();
 
         xRecorder = new XRecorder("a.txt");
     }
@@ -85,9 +85,13 @@ public class All : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            infoText = Input.mousePosition.x + " " + Input.mousePosition.y;
+            //infoText = Input.GetAxis("Mouse X") + " " + Input.GetAxis("Mouse Y");
+            recognition.ChangeMode();
         }
-        //infoText = new System.Random().Next().ToString();
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            //infoText = "Back";
+        }
         GameObject.Find("Info").GetComponent<Text>().text = infoText;
         lock (eventsMutex)
         {
@@ -139,34 +143,34 @@ public class All : MonoBehaviour {
             emptySentence = false;
         }
         xRecorder.Record("click " + x + " " + y);
-        inputedPoints.Add(new Vector2(x, y));
-        UpdateInputed();
+        inputtedPoints.Add(new Vector2(x, y));
+        Updateinputted();
     }
 
     void LeftSlip()
     {
         xRecorder.Record("leftslip");
-        if (inputedPoints.Count == 0 && inputedWords.Count != 0)
+        if (inputtedPoints.Count == 0 && inputtedWords.Count != 0)
         {
-            inputedWords.RemoveAt(inputedWords.Count - 1);
-            inputedPointsAll.RemoveAt(inputedPointsAll.Count - 1);
+            inputtedWords.RemoveAt(inputtedWords.Count - 1);
+            inputtedPointsAll.RemoveAt(inputtedPointsAll.Count - 1);
         }
-        if (inputedPoints.Count > 0)
+        if (inputtedPoints.Count > 0)
         {
-            inputedPoints.RemoveAt(inputedPoints.Count - 1);
+            inputtedPoints.RemoveAt(inputtedPoints.Count - 1);
         }
-        UpdateInputed();
+        Updateinputted();
     }
 
     void RightSlip()
     {
         string[] sampleWords = sampleSentences[sampleIndex].Split(' ');
-        if (inputedPoints.Count == 0 && inputedWords.Count == sampleWords.Length)
+        if (inputtedPoints.Count == 0 && inputtedWords.Count == sampleWords.Length)
         {
             UpdateSample();
-            UpdateInputed();
+            Updateinputted();
         }
-        else if (inputedPoints.Count > 0)
+        else if (inputtedPoints.Count > 0)
         {
             xRecorder.Record("rightslip");
             Select(0);
@@ -176,13 +180,13 @@ public class All : MonoBehaviour {
     void DownSlip()
     {
         xRecorder.Record("downslip");
-        inputedPoints.Clear();
-        UpdateInputed();
+        inputtedPoints.Clear();
+        Updateinputted();
     }
 
     void DragBegin(int x, int y)
     {
-        if (inputedPoints.Count == 0) return;
+        if (inputtedPoints.Count == 0) return;
         xRecorder.Record("dragbegin");
         dragStartX = x;
         dragStartY = y;
@@ -192,7 +196,7 @@ public class All : MonoBehaviour {
 
     void Drag(int x, int y)
     {
-        if (inputedPoints.Count == 0) return;
+        if (inputtedPoints.Count == 0) return;
         float addition = DRAG_SMOOTH - 0.5f;
         float selectX2 = 1.0f * (x - dragStartX) / dragSpanX;
         float selectY2 = 1.0f * (y - dragStartY) / dragSpanY;
@@ -210,12 +214,12 @@ public class All : MonoBehaviour {
         }
         selectIndex = selectY * DRAG_COLUMN + selectX;
         selectIndex = Math.Min(selectIndex, candidates.Length - 1);
-        UpdateInputed();
+        Updateinputted();
     }
 
     void DragEnd(int x, int y)
     {
-        if (inputedPoints.Count == 0) return;
+        if (inputtedPoints.Count == 0) return;
         Drag(x, y);
         xRecorder.Record("dragend");
         Select(selectIndex);
@@ -225,22 +229,22 @@ public class All : MonoBehaviour {
     void Select(int index)
     {
         xRecorder.Record("select " + candidates[index] + " " + index + " True");
-        inputedWords.Add(candidates[index]);
-        inputedPointsAll.Add(inputedPoints.ToArray());
-        inputedPoints.Clear();
-        UpdateInputed();
+        inputtedWords.Add(candidates[index]);
+        inputtedPointsAll.Add(inputtedPoints.ToArray());
+        inputtedPoints.Clear();
+        Updateinputted();
     }
 
-    void UpdateInputed()
+    void Updateinputted()
     {
         Color cIdle = new Color(0.5f, 0.9f, 1.0f);
         Color cSelected = new Color(1.0f, 0.8f, 0.0f);
-        string inputedTot = "";
-        foreach (string word in inputedWords) inputedTot += word + " ";
-        if (inputedPoints.Count > 0)
+        string inputtedTot = "";
+        foreach (string word in inputtedWords) inputtedTot += word + " ";
+        if (inputtedPoints.Count > 0)
         {
-            candidates = recognition.Recognize(inputedPoints);
-            inputedTot += "<color=#ff0000><b>" + candidates[0] + "</b></color>";
+            candidates = recognition.Recognize(inputtedPoints);
+            inputtedTot += "<color=#ff0000><b>" + candidates[0] + "</b></color>";
             for (int i = 0; i < DRAG_ITEM_N; i++)
             {
                 tDragItems[i].text = candidates[i];
@@ -256,15 +260,15 @@ public class All : MonoBehaviour {
                 tDragItems[i].transform.parent.GetComponent<Image>().color = cIdle;
             }
         }
-        inputedTot += "<color=#ff5555>|</color>";
-        tInputed.text = inputedTot;
+        inputtedTot += "<color=#ff5555>|</color>";
+        tinputted.text = inputtedTot;
     }
     
     void UpdateSample()
     {
-        adaption.AddData(inputedPointsAll, inputedWords);
-        inputedPointsAll.Clear();
-        inputedWords.Clear();
+        adaption.AddData(inputtedPointsAll, inputtedWords);
+        inputtedPointsAll.Clear();
+        inputtedWords.Clear();
         sampleIndex = (sampleIndex + 1) % sampleSentences.Length;
         tSample.text = sampleSentences[sampleIndex];
         emptySentence = true;

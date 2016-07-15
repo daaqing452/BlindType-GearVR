@@ -12,30 +12,27 @@ public class Recognition
     const int ALPHABET_SIZE = 26;
     const int LANGUAGE_MODEL_SIZE = 50000;
     const int TOP_K = 25;
+    Prediction[] ALGORITHMS = new Prediction[2];
 
     public Dictionary<string, float> languageModel;
     public GaussianPair[] absoluteGaussianPair;
     public GaussianPair[,] relativeGaussianPair;
     Prediction prediction;
+    int algorithmIndex = 0;
     
     public Recognition()
     {
         LoadLanguageModel();
         LoadAbsoluteKeyboardModel();
         LoadRelativeKeyboardModel();
-        ChangeMode();
+        ALGORITHMS[0] = Absolute;
+        ALGORITHMS[1] = Relative;
+        ChangeMode(1);
     }
-    public void ChangeMode(string algorithm = "RGK")
+    public void ChangeMode(int index = -1)
     {
-        switch (algorithm)
-        {
-            case "AGK":
-                prediction = Absolute;
-                break;
-            case "RGK":
-                prediction = Relative;
-                break;
-        }
+        if (index == -1) index = (algorithmIndex + 1) % ALGORITHMS.Length;
+        prediction = ALGORITHMS[index];
     }
     public string[] Recognize(List<Vector2> pointList)
     {
