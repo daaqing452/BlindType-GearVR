@@ -5,7 +5,7 @@ using System.IO;
 
 using StringFloat = System.Collections.Generic.KeyValuePair<string, float>;
 
-class Recognition
+public class Recognition
 {
     delegate float Prediction(string guess, List<Vector2> pointList);
 
@@ -16,11 +16,8 @@ class Recognition
     public Dictionary<string, float> languageModel;
     public GaussianPair[] absoluteGaussianPair;
     public GaussianPair[,] relativeGaussianPair;
-    
-    public GaussianPair[] absoluteKeyboardGaussianPair;
-    public GaussianPair[,] relativeKeyboardGaussianPair;
     Prediction prediction;
-        
+    
     public Recognition()
     {
         LoadLanguageModel();
@@ -33,12 +30,9 @@ class Recognition
         switch (algorithm)
         {
             case "AGK":
-                absoluteGaussianPair = absoluteKeyboardGaussianPair;
                 prediction = Absolute;
                 break;
             case "RGK":
-                absoluteGaussianPair = absoluteKeyboardGaussianPair;
-                relativeGaussianPair = relativeKeyboardGaussianPair;
                 prediction = Relative;
                 break;
         }
@@ -78,9 +72,9 @@ class Recognition
         }
         Debug.Log("Load language model : " + languageModel.Count);
     }
-    void LoadAbsoluteKeyboardModel()
+    public void LoadAbsoluteKeyboardModel(bool pre = false, float prexk = 0f, float prexb = 0f, float preyk = 0f, float preyb = 0f)
     {
-        absoluteKeyboardGaussianPair = new GaussianPair[ALPHABET_SIZE];
+        absoluteGaussianPair = new GaussianPair[ALPHABET_SIZE];
         string[] lines = XFileReader.Read("Absolute-General-Keyboard.txt");
         string line = lines[0];
         string[] lineArray = line.Split('\t');
@@ -90,16 +84,23 @@ class Recognition
         float yk = float.Parse(lineArray[3]);
         float yb = float.Parse(lineArray[4]);
         float ystddev = float.Parse(lineArray[5]);
+        if (pre)
+        {
+            xk = prexk;
+            xb = prexb;
+            yk = preyk;
+            yb = preyb;
+        }
         for (int i = 0; i < ALPHABET_SIZE; ++i)
         {
             Vector2 p = StandardPosition((char)(i + 'a'));
-            absoluteKeyboardGaussianPair[i] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
+            absoluteGaussianPair[i] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
         }
-        Debug.Log("Load absolute keyboard GaussianPair : " + absoluteKeyboardGaussianPair.Length);
+        Debug.Log("Load absolute keyboard GaussianPair : " + absoluteGaussianPair.Length);
     }
-    void LoadRelativeKeyboardModel()
+    public void LoadRelativeKeyboardModel(bool pre = false, float prexk = 0f, float prexb = 0f, float preyk = 0f, float preyb = 0f)
     {
-        relativeKeyboardGaussianPair = new GaussianPair[ALPHABET_SIZE, ALPHABET_SIZE];
+        relativeGaussianPair = new GaussianPair[ALPHABET_SIZE, ALPHABET_SIZE];
         string[] lines = XFileReader.Read("Relative-General-Keyboard.txt");
         string line = lines[0];
         string[] lineArray = line.Split('\t');
@@ -109,13 +110,20 @@ class Recognition
         float yk = float.Parse(lineArray[3]);
         float yb = float.Parse(lineArray[4]);
         float ystddev = float.Parse(lineArray[5]);
+        if (pre)
+        {
+            xk = prexk;
+            xb = prexb;
+            yk = preyk;
+            yb = preyb;
+        }
         for (int i = 0; i < ALPHABET_SIZE; ++i)
             for (int j = 0; j < ALPHABET_SIZE; ++j)
             {
                 Vector2 p = StandardPosition((char)(i + 'a')) - StandardPosition((char)(j + 'a'));
-                relativeKeyboardGaussianPair[i, j] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
+                relativeGaussianPair[i, j] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
             }
-        Debug.Log("Load relative keyboard GaussianPair : " + relativeKeyboardGaussianPair.Length);
+        Debug.Log("Load relative keyboard GaussianPair : " + relativeGaussianPair.Length);
     }
 
     float Absolute(string s, List<Vector2> pointList)
@@ -138,7 +146,7 @@ class Recognition
         return p;
     }
 
-    Vector2 StandardPosition(char c)
+    public static Vector2 StandardPosition(char c)
     {
         string[] standardKeyboard = new string[3] { "qwertyuiop", "asdfghjkl", "zxcvbnm" };
         float[] xBias = new float[3] { 0, 0.25f, 0.75f };
@@ -180,7 +188,7 @@ class Recognition
     }
 }
 
-class Gaussian
+public class Gaussian
 {
     public float mu;
     public float sigma;
@@ -201,7 +209,7 @@ class Gaussian
     }
 }
 
-class GaussianPair
+public class GaussianPair
 {
     public Gaussian xD;
     public Gaussian yD;
