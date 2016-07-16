@@ -23,7 +23,7 @@ public class Adaption
     public void AddData(List<Vector2[]> inputedPointsAll, List<string> inputedWords)
     {
         sentenceCnt++;
-        if (sentenceCnt > ADAPT_CNT) return;
+        //if (sentenceCnt > ADAPT_CNT) return;
         for (int i = 0; i < inputedPointsAll.Count; i++)
         {
             Vector2[] inputedPoints = inputedPointsAll[i];
@@ -41,7 +41,8 @@ public class Adaption
                 }
             }
         }
-        if (sentenceCnt == ADAPT_CNT) ApplyResult();
+        //if (sentenceCnt == ADAPT_CNT) ApplyResult();
+        if (sentenceCnt > 0) ApplyResult(false);
     }
 
     static float[,] Product(float[,] A, float[,] B, int M, int N, int P)
@@ -84,7 +85,7 @@ public class Adaption
         return new Vector2(X[0, 0], X[1, 0]);
     }
 
-    void ApplyResult()
+    void ApplyResult(bool apply = true)
     {
         Vector2 absXkb = LeastSquareMethod(absX);
         Vector2 absYkb = LeastSquareMethod(absY);
@@ -92,7 +93,10 @@ public class Adaption
         Vector2 relYkb = LeastSquareMethod(relY);
         Debug.Log("abs param: " + absXkb.x + " " + absXkb.y + " " + absYkb.x + " " + absYkb.y);
         Debug.Log("rel param: " + relXkb.x + " " + relXkb.y + " " + relYkb.x + " " + relYkb.y);
-        r.LoadAbsoluteKeyboardModel(true, absXkb.x, absXkb.y, absYkb.x, absYkb.y);
-        r.LoadRelativeKeyboardModel(true, relXkb.x, relXkb.y, relYkb.x, relYkb.y);
+        if (apply)
+        {
+            r.LoadAbsoluteKeyboardModel(true, absXkb.x, absXkb.y, absYkb.x, absYkb.y);
+            r.LoadRelativeKeyboardModel(true, relXkb.x, relXkb.y, relYkb.x, relYkb.y);
+        }
     }
 }

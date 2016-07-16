@@ -22,7 +22,8 @@ public class All : MonoBehaviour {
     Text tSample;
     Text tinputted;
     Text[] tDragItems;
-    string infoText;
+    string info0Text;
+    string info1Text;
 
     // sample and inputted
     List<string> inputtedWords;
@@ -66,6 +67,7 @@ public class All : MonoBehaviour {
                 gDragItem.transform.SetParent(canvas.transform);
                 tDragItems[i * DRAG_COLUMN + j] = gDragItem.GetComponentInChildren<Text>();
             }
+        info1Text = recognition.ChangeMode();
 
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
@@ -85,14 +87,15 @@ public class All : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //infoText = Input.GetAxis("Mouse X") + " " + Input.GetAxis("Mouse Y");
-            recognition.ChangeMode();
+            //info0Text = Input.GetAxis("Mouse X") + " " + Input.GetAxis("Mouse Y");
+            info1Text = recognition.ChangeMode();
         }
         if (Input.GetKey(KeyCode.Escape))
         {
-            //infoText = "Back";
+            //info0Text = "Back";
         }
-        GameObject.Find("Info").GetComponent<Text>().text = infoText;
+        GameObject.Find("Info0").GetComponent<Text>().text = info0Text;
+        GameObject.Find("Info1").GetComponent<Text>().text = info1Text;
         lock (eventsMutex)
         {
             for (int i = 0; i < events.Count; i++)
@@ -290,7 +293,7 @@ public class All : MonoBehaviour {
             if (ip.ToString().Substring(0, 3) != "127" && ip.ToString().Split('.').Length == 4) serverIP = ip.ToString();
         }
         Debug.Log("setup:" + serverIP + "," + serverPort);
-        infoText = serverIP;
+        info0Text = serverIP;
         listener = new TcpListener(IPAddress.Parse(serverIP), serverPort);
         Thread listenThread = new Thread(ListenThread);
         listenThread.Start();
@@ -309,9 +312,9 @@ public class All : MonoBehaviour {
 
     void ReceiveThread(object clientObject)
     {
-        infoText = "client in";
+        info0Text = "client in";
         Debug.Log("client in");
-        //infoText = Application.persistentDataPath;
+        //info0Text = Application.persistentDataPath;
         TcpClient client = (TcpClient)clientObject;
         StreamReader reader = new StreamReader(client.GetStream());
         while (true)
@@ -332,7 +335,7 @@ public class All : MonoBehaviour {
             }
         }
         reader.Close();
-        infoText = "client out";
+        info0Text = "client out";
         Debug.Log("client out");
     }
 }
@@ -372,7 +375,14 @@ class XRecorder
 
     public XRecorder(string filename)
     {
-        writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filename, FileMode.Append));
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            writer = new StreamWriter(new FileStream(Application.dataPath + "//" + filename, FileMode.Append));
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filename, FileMode.Append));
+        }
     }
 
     public void Record(string s)
