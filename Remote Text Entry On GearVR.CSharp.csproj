@@ -104,7 +104,8 @@
     <None Include="Assets\StreamingAssets\Relative-General-Keyboard.txt" />
     <None Include="Assets\StreamingAssets\phrases-all.txt" />
     <None Include="Assets\StreamingAssets\phrases-normal.txt" />
-    <None Include="Assets\a.txt" />
+    <None Include="Assets\deb.txt" />
+    <None Include="Assets\log.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

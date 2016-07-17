@@ -18,12 +18,15 @@ public class All : MonoBehaviour {
     List<string> events;
     object eventsMutex;
     
-    // component
+    // ui component
     Text tSample;
     Text tinputted;
     Text[] tDragItems;
     string info0Text;
-    string info1Text;
+
+    // configuration
+    string serverIP;
+    public string algorithm;
 
     // sample and inputted
     List<string> inputtedWords;
@@ -31,9 +34,9 @@ public class All : MonoBehaviour {
     List<Vector2[]> inputtedPointsAll;
     string[] sampleSentences;
     int sampleIndex;
-    string[] candidates;
+    List<string> candidates;
 
-    // operation
+    // typing
     int deviceWidth, deviceHeight;
     const int DRAG_ROW = 5;
     const int DRAG_COLUMN = 5;
@@ -43,15 +46,19 @@ public class All : MonoBehaviour {
     int dragSpanX, dragSpanY;
     int selectX, selectY, selectIndex;
 
-    // record
-    XRecorder xRecorder;
+    // Record
+    XFileWriter log;
+    public XFileWriter deb;
     bool emptySentence;
 
     void Start()
     {
+        log = new XFileWriter("log.txt");
+        deb = new XFileWriter("deb.txt");
+
         SetupServer();
-        recognition = new Recognition();
-        adaption = new Adaption(recognition);
+        recognition = new Recognition(this);
+        adaption = new Adaption(this, recognition);
         events = new List<string>();
         eventsMutex = new object();
         
@@ -67,7 +74,7 @@ public class All : MonoBehaviour {
                 gDragItem.transform.SetParent(canvas.transform);
                 tDragItems[i * DRAG_COLUMN + j] = gDragItem.GetComponentInChildren<Text>();
             }
-        info1Text = recognition.ChangeMode();
+        recognition.ChangeMode();
 
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
@@ -79,8 +86,6 @@ public class All : MonoBehaviour {
         
         UpdateSample();
         Updateinputted();
-
-        xRecorder = new XRecorder("a.txt");
     }
 
     void Update()
@@ -88,14 +93,17 @@ public class All : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             //info0Text = Input.GetAxis("Mouse X") + " " + Input.GetAxis("Mouse Y");
-            info1Text = recognition.ChangeMode();
+            recognition.ChangeMode();
         }
         if (Input.GetKey(KeyCode.Escape))
         {
-            //info0Text = "Back";
+            log.Close();
+            deb.Close();
+            log = new XFileWriter("log.txt", false);
+            deb = new XFileWriter("deb.txt", false);
         }
         GameObject.Find("Info0").GetComponent<Text>().text = info0Text;
-        GameObject.Find("Info1").GetComponent<Text>().text = info1Text;
+        GameObject.Find("Info1").GetComponent<Text>().text = DateTime.Now.ToString("HH:mm:ss") + " <color=#d078d0>" + algorithm + "</color> <color=#00ee99>Now:" + sampleIndex + "</color>";
         lock (eventsMutex)
         {
             for (int i = 0; i < events.Count; i++)
@@ -142,17 +150,17 @@ public class All : MonoBehaviour {
     {
         if (emptySentence)
         {
-            xRecorder.Record("sentence " + sampleSentences[sampleIndex]);
+            log.TimeWriteLine("sentence " + sampleSentences[sampleIndex]);
             emptySentence = false;
         }
-        xRecorder.Record("click " + x + " " + y);
+        log.TimeWriteLine("click " + x + " " + y);
         inputtedPoints.Add(new Vector2(x, y));
         Updateinputted();
     }
 
     void LeftSlip()
     {
-        xRecorder.Record("leftslip");
+        log.TimeWriteLine("leftslip");
         if (inputtedPoints.Count == 0 && inputtedWords.Count != 0)
         {
             inputtedWords.RemoveAt(inputtedWords.Count - 1);
@@ -175,14 +183,14 @@ public class All : MonoBehaviour {
         }
         else if (inputtedPoints.Count > 0)
         {
-            xRecorder.Record("rightslip");
+            log.TimeWriteLine("rightslip");
             Select(0);
         }
     }
 
     void DownSlip()
     {
-        xRecorder.Record("downslip");
+        log.TimeWriteLine("downslip");
         inputtedPoints.Clear();
         Updateinputted();
     }
@@ -190,13 +198,12 @@ public class All : MonoBehaviour {
     void DragBegin(int x, int y)
     {
         if (inputtedPoints.Count == 0) return;
-        xRecorder.Record("dragbegin");
+        log.TimeWriteLine("dragbegin");
         dragStartX = x;
         dragStartY = y;
         dragSpanX = Math.Min(Math.Max((deviceWidth - x - 40) / DRAG_COLUMN, 10), 80);
         dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
     }
-
     void Drag(int x, int y)
     {
         if (inputtedPoints.Count == 0) return;
@@ -216,22 +223,23 @@ public class All : MonoBehaviour {
             selectY = Math.Min(Math.Max(selectY, 0), DRAG_ROW - 1);
         }
         selectIndex = selectY * DRAG_COLUMN + selectX;
-        selectIndex = Math.Min(selectIndex, candidates.Length - 1);
+        selectIndex = Math.Min(selectIndex, candidates.Count - 1);
         Updateinputted();
     }
-
     void DragEnd(int x, int y)
     {
         if (inputtedPoints.Count == 0) return;
         Drag(x, y);
-        xRecorder.Record("dragend");
+        log.TimeWriteLine("dragend");
         Select(selectIndex);
         selectIndex = 0;
     }
 
     void Select(int index)
     {
-        xRecorder.Record("select " + candidates[index] + " " + index + " True");
+        string[] sampleArray = sampleSentences[sampleIndex].Split(' ');
+        string requireWord = (inputtedWords.Count < sampleArray.Length) ? sampleArray[inputtedWords.Count] : "";
+        log.TimeWriteLine("select " + candidates[index] + " " + index + " " + candidates.Contains(requireWord));
         inputtedWords.Add(candidates[index]);
         inputtedPointsAll.Add(inputtedPoints.ToArray());
         inputtedPoints.Clear();
@@ -266,7 +274,6 @@ public class All : MonoBehaviour {
         inputtedTot += "<color=#ff5555>|</color>";
         tinputted.text = inputtedTot;
     }
-    
     void UpdateSample()
     {
         adaption.AddData(inputtedPointsAll, inputtedWords);
@@ -282,7 +289,7 @@ public class All : MonoBehaviour {
         int serverPort = 10309;
         string hostName = Dns.GetHostName();
         IPAddress[] addressList = Dns.GetHostAddresses(hostName);
-        string serverIP = null;
+        serverIP = null;
         foreach (IPAddress ip in addressList)
         {
             if (ip.ToString().IndexOf("192.168.") != -1)
@@ -298,7 +305,6 @@ public class All : MonoBehaviour {
         Thread listenThread = new Thread(ListenThread);
         listenThread.Start();
     }
-
     void ListenThread()
     {
         listener.Start();
@@ -309,13 +315,11 @@ public class All : MonoBehaviour {
             receiveThread.Start(client);
         }
     }
-
     void ReceiveThread(object clientObject)
     {
-        info0Text = "client in";
-        Debug.Log("client in");
-        //info0Text = Application.persistentDataPath;
         TcpClient client = (TcpClient)clientObject;
+        info0Text = "client in (" + client.Client.RemoteEndPoint.ToString() + ")";
+        Debug.Log("client in");
         StreamReader reader = new StreamReader(client.GetStream());
         while (true)
         {
@@ -335,7 +339,7 @@ public class All : MonoBehaviour {
             }
         }
         reader.Close();
-        info0Text = "client out";
+        info0Text = serverIP;
         Debug.Log("client out");
     }
 }
@@ -368,32 +372,43 @@ class XFileReader
     }
 }
 
-class XRecorder
+public class XFileWriter
 {
     StreamWriter writer;
     string filename;
 
-    public XRecorder(string filename)
+    public XFileWriter(string filename, bool append = true)
     {
+        FileMode fileMode = append ? FileMode.Append : FileMode.Create;
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            writer = new StreamWriter(new FileStream(Application.dataPath + "//" + filename, FileMode.Append));
+            writer = new StreamWriter(new FileStream(Application.dataPath + "//" + filename, fileMode));
         }
         else if (Application.platform == RuntimePlatform.Android)
         {
-            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filename, FileMode.Append));
+            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filename, fileMode));
         }
     }
 
-    public void Record(string s)
+    public void TimeWriteLine(string s)
     {
         long nowTime = DateTime.Now.ToFileTimeUtc() / 10000 % 100000000;
-        writer.WriteLine(nowTime + " " + s);
+        WriteLine(nowTime + " " + s);
+    }
+
+    public void WriteLine(string s)
+    {
+        writer.WriteLine(s);
         writer.Flush();
     }
 
-    ~XRecorder()
+    public void Close()
     {
         writer.Close();
+    }
+
+    ~XFileWriter()
+    {
+        Close();
     }
 }

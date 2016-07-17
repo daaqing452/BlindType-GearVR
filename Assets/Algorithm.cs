@@ -14,28 +14,31 @@ public class Recognition
     const int TOP_K = 25;
     Prediction[] ALGORITHMS = new Prediction[2];
 
+    All all;
+
     public Dictionary<string, double> languageModel;
     public GaussianPair[] absoluteGaussianPair;
     public GaussianPair[,] relativeGaussianPair;
     Prediction prediction;
     int algorithmIndex = 0;
     
-    public Recognition()
+    public Recognition(All all)
     {
+        this.all = all;
         LoadLanguageModel();
         LoadAbsoluteKeyboardModel();
         LoadRelativeKeyboardModel();
         ALGORITHMS[0] = Absolute;
         ALGORITHMS[1] = Relative;
     }
-    public string ChangeMode(int index = -1)
+    public void ChangeMode(int index = -1)
     {
         algorithmIndex = (algorithmIndex + 1) % ALGORITHMS.Length;
         if (index == -1) index = algorithmIndex;
         prediction = ALGORITHMS[index];
-        return (index == 0) ? "Absolute" : "Relative";
+        all.algorithm = (index == 0) ? "Absolute" : "Relative";
     }
-    public string[] Recognize(List<Vector2> pointList)
+    public List<string> Recognize(List<Vector2> pointList)
     {
         PriorityQueue q = new PriorityQueue();
         foreach (StringDouble k in languageModel)
@@ -55,7 +58,7 @@ public class Recognition
         }
         candidates.Reverse();
         Ordering(candidates);
-        return candidates.ToArray();
+        return candidates;
     }
 
     void LoadLanguageModel()
