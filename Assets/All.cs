@@ -33,7 +33,8 @@ public class All : MonoBehaviour {
     List<Vector2> inputtedPoints;
     List<Vector2[]> inputtedPointsAll;
     string[] sampleSentences;
-    int sampleIndex;
+    string sampleSentence;
+    int sampleCnt;
     List<string> candidates;
 
     // typing
@@ -79,10 +80,9 @@ public class All : MonoBehaviour {
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
         inputtedPointsAll = new List<Vector2[]>();
-        sampleSentences = XFileReader.Read("phrases-normal.txt");
+        sampleSentences = XFileReader.Read("phrases-all.txt");
         for (int i = 0; i < sampleSentences.Length; i++) sampleSentences[i] = sampleSentences[i].ToLower();
-        sampleIndex = -1;
-        selectIndex = 0;
+        sampleCnt = -1;
         
         UpdateSample();
         Updateinputted();
@@ -103,7 +103,7 @@ public class All : MonoBehaviour {
             deb = new XFileWriter("deb.txt", false);
         }
         GameObject.Find("Info0").GetComponent<Text>().text = info0Text;
-        GameObject.Find("Info1").GetComponent<Text>().text = DateTime.Now.ToString("HH:mm:ss") + " <color=#d078d0>" + algorithm + "</color> <color=#00ee99>Now:" + sampleIndex + "</color>";
+        GameObject.Find("Info1").GetComponent<Text>().text = DateTime.Now.ToString("HH:mm:ss") + " <color=#d078d0>" + algorithm + "</color> <color=#00ee99>Now:" + sampleCnt + "</color>";
         lock (eventsMutex)
         {
             for (int i = 0; i < events.Count; i++)
@@ -150,7 +150,7 @@ public class All : MonoBehaviour {
     {
         if (emptySentence)
         {
-            log.TimeWriteLine("sentence " + sampleSentences[sampleIndex]);
+            log.TimeWriteLine("sentence " + sampleSentence);
             emptySentence = false;
         }
         log.TimeWriteLine("click " + x + " " + y);
@@ -175,7 +175,7 @@ public class All : MonoBehaviour {
 
     void RightSlip()
     {
-        string[] sampleWords = sampleSentences[sampleIndex].Split(' ');
+        string[] sampleWords = sampleSentence.Split(' ');
         if (inputtedPoints.Count == 0 && inputtedWords.Count == sampleWords.Length)
         {
             UpdateSample();
@@ -237,8 +237,8 @@ public class All : MonoBehaviour {
 
     void Select(int index)
     {
-        string[] sampleArray = sampleSentences[sampleIndex].Split(' ');
-        string requireWord = (inputtedWords.Count < sampleArray.Length) ? sampleArray[inputtedWords.Count] : "";
+        string[] sampleWords = sampleSentence.Split(' ');
+        string requireWord = (inputtedWords.Count < sampleWords.Length) ? sampleWords[inputtedWords.Count] : "";
         log.TimeWriteLine("select " + candidates[index] + " " + index + " " + candidates.Contains(requireWord));
         inputtedWords.Add(candidates[index]);
         inputtedPointsAll.Add(inputtedPoints.ToArray());
@@ -279,8 +279,9 @@ public class All : MonoBehaviour {
         adaption.AddData(inputtedPointsAll, inputtedWords);
         inputtedPointsAll.Clear();
         inputtedWords.Clear();
-        sampleIndex = (sampleIndex + 1) % sampleSentences.Length;
-        tSample.text = sampleSentences[sampleIndex];
+        sampleCnt++;
+        int index = new System.Random().Next() % sampleSentences.Length;
+        tSample.text = sampleSentence = sampleSentences[index];
         emptySentence = true;
     }
 
