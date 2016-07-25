@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Adaption
 {
-    const int ADAPT_CNT = 6;
+    const int ADAPT_CNT = 25;
 
     All all;
     Recognition r;
@@ -43,7 +43,7 @@ public class Adaption
                 }
             }
         }
-        if (sentenceCnt == ADAPT_CNT) ApplyResult(); else ApplyResult(false);
+        ApplyResult(sentenceCnt == ADAPT_CNT);
     }
 
     static float[,] Product(float[,] A, float[,] B, int M, int N, int P)

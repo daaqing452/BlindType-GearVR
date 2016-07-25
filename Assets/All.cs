@@ -54,8 +54,9 @@ public class All : MonoBehaviour {
 
     void Start()
     {
-        log = new XFileWriter("log.txt");
-        deb = new XFileWriter("deb.txt");
+        string suffix = DateTime.Now.ToString("yyMMdd-HHmmss");
+        log = new XFileWriter("log-" + suffix + ".txt");
+        deb = new XFileWriter("deb-" + suffix + ".txt");
 
         SetupServer();
         recognition = new Recognition(this);
