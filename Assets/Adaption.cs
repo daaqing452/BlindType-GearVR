@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Adaption
 {
-    const int ADAPT_CNT = 25;
+    const int ADAPT_CNT = 20;
 
     All all;
     Recognition r;
@@ -95,6 +95,7 @@ public class Adaption
         all.deb.WriteLine("abs param: " + absXkb.x + " " + absXkb.y + " " + absYkb.x + " " + absYkb.y + "\trel param: " + relXkb.x + " " + relXkb.y + " " + relYkb.x + " " + relYkb.y);
         if (apply)
         {
+            all.deb.WriteLine("apply");
             r.LoadAbsoluteKeyboardModel(true, absXkb.x, absXkb.y, absYkb.x, absYkb.y);
             r.LoadRelativeKeyboardModel(true, relXkb.x, relXkb.y, relYkb.x, relYkb.y);
         }

@@ -30,6 +30,7 @@ public class Recognition
         LoadRelativeKeyboardModel();
         ALGORITHMS[0] = Absolute;
         ALGORITHMS[1] = Relative;
+        ChangeMode(1);
     }
     public void ChangeMode(int index = -1)
     {

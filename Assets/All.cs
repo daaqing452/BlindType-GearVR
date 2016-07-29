@@ -51,19 +51,20 @@ public class All : MonoBehaviour {
     XFileWriter log;
     public XFileWriter deb;
     bool emptySentence;
+    public string fileStartTime;
 
     void Start()
     {
-        string suffix = DateTime.Now.ToString("yyMMdd-HHmmss");
-        log = new XFileWriter("log-" + suffix + ".txt");
-        deb = new XFileWriter("deb-" + suffix + ".txt");
+        fileStartTime = DateTime.Now.ToString("yyMMdd-HHmmss");
+        log = new XFileWriter(this, "log-");
+        deb = new XFileWriter(this, "deb-");
 
         SetupServer();
         recognition = new Recognition(this);
         adaption = new Adaption(this, recognition);
         events = new List<string>();
         eventsMutex = new object();
-        
+
         tSample = GameObject.Find("Sample").GetComponent<Text>();
         tinputted = GameObject.Find("Inputted").GetComponent<Text>();
         tDragItems = new Text[DRAG_ITEM_N];
@@ -76,7 +77,6 @@ public class All : MonoBehaviour {
                 gDragItem.transform.SetParent(canvas.transform);
                 tDragItems[i * DRAG_COLUMN + j] = gDragItem.GetComponentInChildren<Text>();
             }
-        recognition.ChangeMode();
 
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
@@ -98,10 +98,7 @@ public class All : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.Escape))
         {
-            log.Close();
-            deb.Close();
-            log = new XFileWriter("log.txt", false);
-            deb = new XFileWriter("deb.txt", false);
+            // no nothing
         }
         GameObject.Find("Info0").GetComponent<Text>().text = info0Text;
         GameObject.Find("Info1").GetComponent<Text>().text = DateTime.Now.ToString("HH:mm:ss") + " <color=#d078d0>" + algorithm + "</color> <color=#00ee99>Now:" + sampleCnt + "</color>";
@@ -151,17 +148,17 @@ public class All : MonoBehaviour {
     {
         if (emptySentence)
         {
-            log.TimeWriteLine("sentence " + sampleSentence);
+            log.WriteLine("sentence " + sampleCnt + " " + sampleSentence);
             emptySentence = false;
         }
-        log.TimeWriteLine("click " + x + " " + y);
+        log.WriteLine("click " + x + " " + y);
         inputtedPoints.Add(new Vector2(x, y));
         Updateinputted();
     }
 
     void LeftSlip()
     {
-        log.TimeWriteLine("leftslip");
+        log.WriteLine("leftslip");
         if (inputtedPoints.Count == 0 && inputtedWords.Count != 0)
         {
             inputtedWords.RemoveAt(inputtedWords.Count - 1);
@@ -184,14 +181,14 @@ public class All : MonoBehaviour {
         }
         else if (inputtedPoints.Count > 0)
         {
-            log.TimeWriteLine("rightslip");
+            log.WriteLine("rightslip");
             Select(0);
         }
     }
 
     void DownSlip()
     {
-        log.TimeWriteLine("downslip");
+        log.WriteLine("downslip");
         inputtedPoints.Clear();
         Updateinputted();
     }
@@ -199,7 +196,7 @@ public class All : MonoBehaviour {
     void DragBegin(int x, int y)
     {
         if (inputtedPoints.Count == 0) return;
-        log.TimeWriteLine("dragbegin");
+        log.WriteLine("dragbegin");
         dragStartX = x;
         dragStartY = y;
         dragSpanX = Math.Min(Math.Max((deviceWidth - x - 40) / DRAG_COLUMN, 10), 80);
@@ -231,7 +228,7 @@ public class All : MonoBehaviour {
     {
         if (inputtedPoints.Count == 0) return;
         Drag(x, y);
-        log.TimeWriteLine("dragend");
+        log.WriteLine("dragend");
         Select(selectIndex);
         selectIndex = 0;
     }
@@ -240,7 +237,7 @@ public class All : MonoBehaviour {
     {
         string[] sampleWords = sampleSentence.Split(' ');
         string requireWord = (inputtedWords.Count < sampleWords.Length) ? sampleWords[inputtedWords.Count] : "";
-        log.TimeWriteLine("select " + candidates[index] + " " + index + " " + candidates.Contains(requireWord));
+        log.WriteLine("select " + candidates[index] + " " + index + " " + candidates.Contains(requireWord));
         inputtedWords.Add(candidates[index]);
         inputtedPointsAll.Add(inputtedPoints.ToArray());
         inputtedPoints.Clear();
@@ -294,7 +291,8 @@ public class All : MonoBehaviour {
         serverIP = null;
         foreach (IPAddress ip in addressList)
         {
-            if (ip.ToString().IndexOf("192.168.") != -1)
+            //if (ip.ToString().IndexOf("192.168.") != -1)
+            if (ip.ToString().IndexOf("166.111.") != -1)
             {
                 serverIP = ip.ToString();
                 break;
@@ -376,41 +374,35 @@ class XFileReader
 
 public class XFileWriter
 {
-    StreamWriter writer;
-    string filename;
+    All all;
+    string filePrefix;
 
-    public XFileWriter(string filename, bool append = true)
+    public XFileWriter(All all, string filePrefix)
     {
+        this.all = all;
+        this.filePrefix = filePrefix;
+    }
+
+    public void WriteLine(string s, bool append = true)
+    {
+        StreamWriter writer;
         FileMode fileMode = append ? FileMode.Append : FileMode.Create;
+        string fileSuffix = all.algorithm + "-" + all.fileStartTime + ".txt";
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            writer = new StreamWriter(new FileStream(Application.dataPath + "//" + filename, fileMode));
+            writer = new StreamWriter(new FileStream(Application.dataPath + "//" + filePrefix + fileSuffix, fileMode));
         }
         else if (Application.platform == RuntimePlatform.Android)
         {
-            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filename, fileMode));
+            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + fileSuffix, fileMode));
         }
-    }
-
-    public void TimeWriteLine(string s)
-    {
+        else
+        {
+            writer = null;
+        }
         long nowTime = DateTime.Now.ToFileTimeUtc() / 10000 % 100000000;
-        WriteLine(nowTime + " " + s);
-    }
-
-    public void WriteLine(string s)
-    {
-        writer.WriteLine(s);
+        writer.WriteLine(nowTime + " " + s);
         writer.Flush();
-    }
-
-    public void Close()
-    {
         writer.Close();
-    }
-
-    ~XFileWriter()
-    {
-        Close();
     }
 }
