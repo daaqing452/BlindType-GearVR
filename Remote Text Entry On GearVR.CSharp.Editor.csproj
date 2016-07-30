@@ -115,6 +115,7 @@
     <None Include="Assets\StreamingAssets\ANC-all-count.txt" />
     <None Include="Assets\StreamingAssets\Absolute-General-Keyboard.txt" />
     <None Include="Assets\StreamingAssets\Relative-General-Keyboard.txt" />
+    <None Include="Assets\StreamingAssets\phrases-all-filtered.txt" />
     <None Include="Assets\StreamingAssets\phrases-all.txt" />
     <None Include="Assets\StreamingAssets\phrases-normal.txt" />
   </ItemGroup>

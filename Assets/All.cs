@@ -57,7 +57,7 @@ public class All : MonoBehaviour {
     {
         fileStartTime = DateTime.Now.ToString("yyMMdd-HHmmss");
         log = new XFileWriter(this, "log-");
-        deb = new XFileWriter(this, "deb-");
+        deb = new XFileWriter(this, "deb-", false);
 
         SetupServer();
         recognition = new Recognition(this);
@@ -81,7 +81,7 @@ public class All : MonoBehaviour {
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
         inputtedPointsAll = new List<Vector2[]>();
-        sampleSentences = XFileReader.Read("phrases-all.txt");
+        sampleSentences = XFileReader.Read("phrases-all-filtered.txt");
         for (int i = 0; i < sampleSentences.Length; i++) sampleSentences[i] = sampleSentences[i].ToLower();
         sampleCnt = -1;
         
@@ -376,15 +376,18 @@ public class XFileWriter
 {
     All all;
     string filePrefix;
+    bool enable;
 
-    public XFileWriter(All all, string filePrefix)
+    public XFileWriter(All all, string filePrefix, bool enable = true)
     {
         this.all = all;
         this.filePrefix = filePrefix;
+        this.enable = enable;
     }
 
     public void WriteLine(string s, bool append = true)
     {
+        if (!enable) return;
         StreamWriter writer;
         FileMode fileMode = append ? FileMode.Append : FileMode.Create;
         string fileSuffix = all.algorithm + "-" + all.fileStartTime + ".txt";
@@ -394,7 +397,7 @@ public class XFileWriter
         }
         else if (Application.platform == RuntimePlatform.Android)
         {
-            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + fileSuffix, fileMode));
+            writer = new StreamWriter(new FileStream(Application.persistentDataPath + "//" + filePrefix + fileSuffix, fileMode));
         }
         else
         {
