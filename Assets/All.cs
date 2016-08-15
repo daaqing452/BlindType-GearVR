@@ -86,7 +86,7 @@ public class All : MonoBehaviour {
         sampleCnt = -1;
         
         UpdateSample();
-        Updateinputted();
+        UpdateInputted();
     }
 
     void Update()
@@ -153,7 +153,7 @@ public class All : MonoBehaviour {
         }
         log.WriteLine("click " + x + " " + y);
         inputtedPoints.Add(new Vector2(x, y));
-        Updateinputted();
+        UpdateInputted();
     }
 
     void LeftSlip()
@@ -168,7 +168,7 @@ public class All : MonoBehaviour {
         {
             inputtedPoints.RemoveAt(inputtedPoints.Count - 1);
         }
-        Updateinputted();
+        UpdateInputted();
     }
 
     void RightSlip()
@@ -177,7 +177,7 @@ public class All : MonoBehaviour {
         if (inputtedPoints.Count == 0 && inputtedWords.Count == sampleWords.Length)
         {
             UpdateSample();
-            Updateinputted();
+            UpdateInputted();
         }
         else if (inputtedPoints.Count > 0)
         {
@@ -190,7 +190,7 @@ public class All : MonoBehaviour {
     {
         log.WriteLine("downslip");
         inputtedPoints.Clear();
-        Updateinputted();
+        UpdateInputted();
     }
 
     void DragBegin(int x, int y)
@@ -202,7 +202,7 @@ public class All : MonoBehaviour {
         dragSpanX = Math.Min(Math.Max((deviceWidth - x - 40) / DRAG_COLUMN, 10), 80);
         dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
     }
-    void Drag(int x, int y)
+    void Drag(int x, int y) 
     {
         if (inputtedPoints.Count == 0) return;
         float addition = DRAG_SMOOTH - 0.5f;
@@ -222,7 +222,7 @@ public class All : MonoBehaviour {
         }
         selectIndex = selectY * DRAG_COLUMN + selectX;
         selectIndex = Math.Min(selectIndex, candidates.Count - 1);
-        Updateinputted();
+        UpdateInputted();
     }
     void DragEnd(int x, int y)
     {
@@ -241,10 +241,10 @@ public class All : MonoBehaviour {
         inputtedWords.Add(candidates[index]);
         inputtedPointsAll.Add(inputtedPoints.ToArray());
         inputtedPoints.Clear();
-        Updateinputted();
+        UpdateInputted();
     }
 
-    void Updateinputted()
+    void UpdateInputted()
     {
         Color cIdle = new Color(0.5f, 0.9f, 1.0f);
         Color cSelected = new Color(1.0f, 0.8f, 0.0f);
