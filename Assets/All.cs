@@ -81,14 +81,15 @@ public class All : MonoBehaviour {
         inputtedWords = new List<string>();
         inputtedPoints = new List<Vector2>();
         inputtedPointsAll = new List<Vector2[]>();
-        sampleSentences = XFileReader.Read("phrases-all-filtered.txt");
+        //sampleSentences = XFileReader.Read("phrases-all-filtered.txt");
+        sampleSentences = XFileReader.Read("phrases-simple.txt");
         for (int i = 0; i < sampleSentences.Length; i++) sampleSentences[i] = sampleSentences[i].ToLower();
         sampleCnt = -1;
         
         UpdateSample();
         UpdateInputted();
     }
-
+    
     void Update()
     {
         if (Input.GetMouseButtonDown(0))

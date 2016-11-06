@@ -118,9 +118,8 @@
     <None Include="Assets\StreamingAssets\phrases-all-filtered.txt" />
     <None Include="Assets\StreamingAssets\phrases-all.txt" />
     <None Include="Assets\StreamingAssets\phrases-normal.txt" />
-    <None Include="Assets\log-Relative-160815-134001.txt" />
-    <None Include="Assets\log-Relative-160815-134338.txt" />
-    <None Include="Assets\log-Relative-160815-134946.txt" />
+    <None Include="Assets\StreamingAssets\phrases-simple.txt" />
+    <None Include="Assets\log-Relative-160928-153538.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
