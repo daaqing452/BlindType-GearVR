@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote Text Entry On GearVR.CSharp", "Remote Text Entry On GearVR.CSharp.csproj", "{32C56796-298F-4812-96BB-588E10D044B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote Text Entry On GearVR", "Remote Text Entry On GearVR.csproj", "{DEE4BDC6-8781-A864-3ACA-7EB7B6C4BFBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote Text Entry On GearVR.CSharp.Editor", "Remote Text Entry On GearVR.CSharp.Editor.csproj", "{019BC6D2-0C56-0512-12CC-868258C9F52A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote Text Entry On GearVR.Editor", "Remote Text Entry On GearVR.Editor.csproj", "{C303B7F7-59EA-481C-FA27-39D8F4559FBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{32C56796-298F-4812-96BB-588E10D044B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32C56796-298F-4812-96BB-588E10D044B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32C56796-298F-4812-96BB-588E10D044B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32C56796-298F-4812-96BB-588E10D044B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{019BC6D2-0C56-0512-12CC-868258C9F52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{019BC6D2-0C56-0512-12CC-868258C9F52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{019BC6D2-0C56-0512-12CC-868258C9F52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{019BC6D2-0C56-0512-12CC-868258C9F52A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEE4BDC6-8781-A864-3ACA-7EB7B6C4BFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEE4BDC6-8781-A864-3ACA-7EB7B6C4BFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEE4BDC6-8781-A864-3ACA-7EB7B6C4BFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEE4BDC6-8781-A864-3ACA-7EB7B6C4BFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C303B7F7-59EA-481C-FA27-39D8F4559FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C303B7F7-59EA-481C-FA27-39D8F4559FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C303B7F7-59EA-481C-FA27-39D8F4559FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C303B7F7-59EA-481C-FA27-39D8F4559FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
